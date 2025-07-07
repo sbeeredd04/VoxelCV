@@ -1,101 +1,127 @@
 # VoxelCV
 
-VoxelCV is a computer vision toolkit focused on analyzing human posture and detecting falls using advanced pose estimation and AI-based image analysis. Its main applications include health monitoring, activity recognition, and safety surveillance, particularly in environments where fall detection is critical (elderly care, workplaces, etc.).
+VoxelCV is an advanced computer vision toolkit for human posture analysis and fall detection, leveraging pose estimation and AI-powered image analysis. It is designed for applications in health monitoring, activity recognition, and safety surveillance, especially where fall detection is critical (e.g., elderly care, workplaces).
 
-This project leverages the following technologies:
-- **Python** – main programming language
-- **OpenCV** – image processing and visualization
-- **MediaPipe** – state-of-the-art pose landmark detection
-- **Matplotlib** – visualization of annotated images
-- **NumPy** – mathematical operations and array handling
-- **Google Gemini API** – AI-powered vision model for fall classification
-- **PIL (Pillow)** – image IO for AI analysis
+---
 
-The repository contains two major functionalities:
-- **Posture Analysis**: Visualize and analyze human posture in images using pose landmarks.
-- **Fall Detection**: Classify and explain fall events in images using Gemini's vision AI.
+## Table of Contents
+
+- [Features](#features)
+- [Architecture](#architecture)
+- [Getting Started](#getting-started)
+- [Usage Guide](#usage-guide)
+  - [Posture Analysis](#posture-analysis)
+  - [Real-Time Posture Classification](#real-time-posture-classification)
+  - [Fall Detection (AI-Powered)](#fall-detection-ai-powered)
+- [Sample Code](#sample-code)
+- [Requirements](#requirements)
+- [Directory Structure](#directory-structure)
+- [License & Credits](#license--credits)
+- [Contact](#contact)
 
 ---
 
 ## Features
 
-### 1. Posture Analysis
-- **Batch processing**: Randomly selects and processes images from a dataset.
-- **Pose estimation**: Detects 33 body landmarks per person using MediaPipe.
-- **Angle measurement**: Computes biomechanical angles (e.g., neck angle) from detected landmarks.
-- **Landmark drawing**: Annotates images with joints, neck, nose, and hips, and overlays calculated angles.
-- **Visualization**: Outputs can be displayed using OpenCV (real-time window) or Matplotlib (static notebook visualization).
-
-### 2. Fall Detection
-- **AI-based analysis**: Uses Google Gemini (via Python SDK) to classify posture in an image as NORMAL, FALLING, or FALLEN.
-- **Explanations**: AI provides a textual explanation for its classification.
-- **Visual feedback**: Annotates images with results, using color-coded overlays (green/yellow/red) based on the fall status.
-- **Timestamping**: Each analysis is timestamped for tracking.
+- **Human Pose Estimation**: Detects and visualizes 33 body landmarks using MediaPipe Pose.
+- **Biomechanical Angle Analysis**: Calculates and displays neck angles and other posture metrics.
+- **Batch & Real-Time Processing**: Supports both static image datasets and live webcam feeds.
+- **AI-Powered Fall Detection**: Uses Google Gemini Vision API for robust fall classification and explanation.
+- **Rich Visualization**: Annotates images with landmarks, angle overlays, and color-coded fall status.
+- **Flexible Output**: View results in OpenCV windows or Matplotlib for Jupyter/Colab compatibility.
 
 ---
 
-## Project Architecture
+## Architecture
+
+Below is a high-level architecture of the VoxelCV project:
 
 ```mermaid
 flowchart TD
-    A[Image Dataset] --> B[Posture Analysis (posture.ipynb)]
-    B --> C[MediaPipe Pose Estimation]
-    C --> D[Landmark Extraction & Angle Calculation]
-    D --> E[Visualization (OpenCV/Matplotlib)]
-    A --> F[Fall Detection (falltest.py)]
-    F --> G[Google Gemini Vision API]
-    G --> H[Fall Classification (NORMAL/FALLING/FALLEN)]
-    H --> I[Annotated Output with Explanation]
+    subgraph Data Flow
+        A[Image Dataset] --> B[Posture Analysis<br/>(posture.ipynb)]
+        B --> C[MediaPipe Pose<br/>Estimation]
+        C --> D[Landmark Extraction<br/>& Angle Calculation]
+        D --> E[Visualization<br/>(OpenCV/Matplotlib)]
+
+        A --> F[Fall Detection<br/>(falltest.py)]
+        F --> G[Google Gemini<br/>Vision API]
+        G --> H[Fall Classification<br/>(NORMAL/FALLING/FALLEN)]
+        H --> I[Annotated Output<br/>with Explanation]
+    end
+
     subgraph Core Libraries
         J(OpenCV)
         K(MediaPipe)
         L(NumPy)
         M(Matplotlib)
-        N(PIL)
+        N(Pillow)
     end
+
     B & F --> J
     B & F --> L
-    B --> C
+    B --> K
     B --> M
     F --> N
     F --> G
 ```
 
-### Breakdown of Components
+---
 
-#### 1. Posture Analysis (`posture.ipynb`)
-- **Image selection**: Randomly selects 10 PNG images from a dataset.
-- **Pose detection**: Uses MediaPipe Pose to find human joints.
-- **Landmark processing**: Extracts coordinates for key points (nose, shoulders, hips).
-- **Angle calculation**: Computes the angle at the neck using vector math.
-- **Annotation**: Draws landmarks, neck, nose, hip midpoints, and connecting lines. Displays the calculated angle on the image.
-- **Output**: Shows annotated images either in a GUI window or inline (Jupyter/IPython).
+## Getting Started
 
-#### 2. Posture Classifier (`postureCalssifier.py`)
-- **Real-time webcam support**: Can process video streams for live posture recognition.
-- **Landmark connection drawing**: Visualizes detected joints and their connections.
-- **Application control**: Closes gracefully on user command.
+### Prerequisites
 
-#### 3. Fall Detection (`falltest.py`)
-- **Image input**: Loads an image for fall analysis.
-- **AI-powered inference**: Sends the image to Google Gemini’s generative vision model with a specific prompt for fall detection.
-- **Result parsing**: Receives and parses the category (NORMAL, FALLING, FALLEN) and explanation.
-- **Annotation**: Overlays results on the image with contextual coloring.
-- **Display**: Shows before/after images and prints the analysis.
+- Python 3.7+
+- [Google Gemini API access & key](https://ai.google.dev/gemini-api/)
+- Required Python packages (see [Requirements](#requirements))
+
+### Installation
+
+```bash
+pip install opencv-python mediapipe numpy matplotlib pillow google-generativeai
+```
 
 ---
 
-## Example Workflow
+## Usage Guide
 
-1. **Prepare Dataset**: Place PNG images of people in `dataset/newDataset/`.
-2. **Run Posture Analysis**: Execute `posture.ipynb` to batch-process and visualize pose landmarks and neck angles.
-3. **Fall Detection**: Use `falltest.py` to analyze individual images for falls, leveraging the Gemini API for AI-powered explanations.
+### Posture Analysis
+
+- **File:** `posture.ipynb`
+- **Function:** Batch processes images to detect human pose, compute biomechanical angles, and visualize results.
+- **Workflow:**
+  1. Randomly selects PNG images from `dataset/newDataset/`.
+  2. Runs MediaPipe Pose to detect body landmarks.
+  3. Calculates key angles (e.g., neck).
+  4. Annotates images with landmarks, connecting lines, and angle values.
+  5. Displays annotated images via OpenCV or Matplotlib.
+
+### Real-Time Posture Classification
+
+- **File:** `postureCalssifier.py`
+- **Function:** Processes live webcam streams for posture visualization and angle measurement.
+- **Features:** 
+  - Real-time landmark detection
+  - Drawing joint connections
+  - Graceful exit via keyboard
+
+### Fall Detection (AI-Powered)
+
+- **File:** `falltest.py`
+- **Function:** Uses Google Gemini Vision API for image-based fall classification and textual explanation.
+- **Workflow:**
+  1. Loads an image for analysis.
+  2. Sends image + prompt to Gemini API.
+  3. Receives category: **NORMAL**, **FALLING**, or **FALLEN**.
+  4. Overlays result and explanation on the image.
+  5. Color-codes output (green/yellow/red) and displays annotated image.
 
 ---
 
-## Sample Code Snippet
+## Sample Code
 
-**Pose Detection and Angle Calculation**
+**Pose Detection & Angle Calculation**
 ```python
 import cv2
 import mediapipe as mp
@@ -110,22 +136,20 @@ rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 results = pose.process(rgb_image)
 if results.pose_landmarks:
     landmarks = results.pose_landmarks.landmark
-    # Example: Calculate neck angle using coordinates
-    # [Coordinate extraction logic...]
-    # [Angle calculation logic...]
+    # [Extract coordinates, calculate angles...]
     mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
     cv2.imshow('Annotated', image)
     cv2.waitKey(0)
 ```
 
-**Fall Detection with Gemini**
+**Fall Detection with Gemini API**
 ```python
 from google import genai
 import PIL.Image
 
 genai.configure(api_key="YOUR_API_KEY")
 client = genai.GenerativeModel('gemini-pro-vision')
-prompt = "Analyze this image for potential fall detection..."
+prompt = "Analyze this image for potential fall detection. Classify as NORMAL, FALLING, or FALLEN. Explain your reasoning."
 image = PIL.Image.open('sample.png')
 response = client.generate_content([prompt, image])
 print(response.text)
@@ -135,15 +159,15 @@ print(response.text)
 
 ## Requirements
 
-- Python 3.7+
-- OpenCV
+- Python 3.7 or newer
+- OpenCV (`opencv-python`)
 - MediaPipe
 - NumPy
 - Matplotlib
 - Pillow (PIL)
-- google-genai (for Gemini vision API access)
+- `google-generativeai` (for Gemini Vision API)
 
-Install dependencies:
+Install with:
 ```bash
 pip install opencv-python mediapipe numpy matplotlib pillow google-generativeai
 ```
@@ -154,32 +178,28 @@ pip install opencv-python mediapipe numpy matplotlib pillow google-generativeai
 
 ```
 VoxelCV/
-├── posture.ipynb              # Jupyter notebook for posture analysis
-├── falltest.py                # Script for fall detection using Gemini
-├── postureCalssifier.py       # Real-time posture classifier with visualization
+├── posture.ipynb              # Notebook for batch posture analysis
+├── postureCalssifier.py       # Real-time webcam posture classifier
+├── falltest.py                # AI-based fall detection script
 ├── dataset/
-│   └── newDataset/            # Folder with input images (.png)
-└── README.md                  # This file
+│   └── newDataset/            # Input images (.png)
+└── README.md                  # Project documentation
 ```
 
 ---
 
-## License
+## License & Credits
 
-This project is for research and educational use. For commercial or clinical use, consult the author.
-
----
-
-## Credits
-
-- MediaPipe: [https://mediapipe.dev/](https://mediapipe.dev/)
-- OpenCV: [https://opencv.org/](https://opencv.org/)
-- Google Gemini: [https://ai.google.dev/gemini-api/](https://ai.google.dev/gemini-api/)
+- **License:** For research and educational use. For commercial or clinical use, contact the author.
+- **Credits:**
+  - [MediaPipe](https://mediapipe.dev/)
+  - [OpenCV](https://opencv.org/)
+  - [Google Gemini](https://ai.google.dev/gemini-api/)
 
 ---
 
 ## Contact
 
-For questions, open an issue on this repository.
+For questions or suggestions, please open an issue on this repository.
 
 ```
