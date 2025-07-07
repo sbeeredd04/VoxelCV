@@ -38,19 +38,19 @@ Below is a high-level architecture of the VoxelCV project:
 
 ```mermaid
 flowchart TD
-    subgraph Data Flow
-        A[Image Dataset] --> B[Posture Analysis<br/>(posture.ipynb)]
-        B --> C[MediaPipe Pose<br/>Estimation]
-        C --> D[Landmark Extraction<br/>& Angle Calculation]
-        D --> E[Visualization<br/>(OpenCV/Matplotlib)]
+    %% Data Flow
+    A[Image Dataset] --> B[Posture Analysis (posture.ipynb)]
+    B --> C[MediaPipe Pose Estimation]
+    C --> D[Landmark Extraction & Angle Calculation]
+    D --> E[Visualization (OpenCV/Matplotlib)]
 
-        A --> F[Fall Detection<br/>(falltest.py)]
-        F --> G[Google Gemini<br/>Vision API]
-        G --> H[Fall Classification<br/>(NORMAL/FALLING/FALLEN)]
-        H --> I[Annotated Output<br/>with Explanation]
-    end
+    A --> F[Fall Detection (falltest.py)]
+    F --> G[Google Gemini Vision API]
+    G --> H[Fall Classification (NORMAL/FALLING/FALLEN)]
+    H --> I[Annotated Output with Explanation]
 
-    subgraph Core Libraries
+    %% Core Libraries
+    subgraph Libraries
         J(OpenCV)
         K(MediaPipe)
         L(NumPy)
@@ -58,10 +58,11 @@ flowchart TD
         N(Pillow)
     end
 
-    B & F --> J
-    B & F --> L
+    B --> J
     B --> K
+    B --> L
     B --> M
+    F --> J
     F --> N
     F --> G
 ```
@@ -202,4 +203,7 @@ VoxelCV/
 
 For questions or suggestions, please open an issue on this repository.
 
-```
+---
+
+> ![image1](image1)
+*Screenshot: Example of architecture section error and mermaid diagram fix.*
