@@ -39,14 +39,14 @@ Below is a high-level architecture of the VoxelCV project:
 ```mermaid
 flowchart TD
     %% Data Flow
-    A[Image Dataset] --> B[Posture Analysis (posture.ipynb)]
+    A[Image Dataset] --> B[Posture Analysis]
     B --> C[MediaPipe Pose Estimation]
     C --> D[Landmark Extraction & Angle Calculation]
-    D --> E[Visualization (OpenCV/Matplotlib)]
+    D --> E[Visualization]
 
-    A --> F[Fall Detection (falltest.py)]
+    A --> F[Fall Detection]
     F --> G[Google Gemini Vision API]
-    G --> H[Fall Classification (NORMAL/FALLING/FALLEN)]
+    G --> H[Fall Classification]
     H --> I[Annotated Output with Explanation]
 
     %% Core Libraries
