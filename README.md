@@ -83,6 +83,19 @@ flowchart TD
 pip install opencv-python mediapipe numpy matplotlib pillow google-generativeai
 ```
 
+### Configuration
+
+Set your Google Gemini API key as an environment variable:
+
+```bash
+export GOOGLE_API_KEY="your_actual_api_key_here"
+```
+
+For Windows:
+```cmd
+set GOOGLE_API_KEY=your_actual_api_key_here
+```
+
 ---
 
 ## Usage Guide
@@ -145,7 +158,7 @@ if results.pose_landmarks:
 
 **Fall Detection with Gemini API**
 ```python
-from google import genai
+import google.generativeai as genai
 import PIL.Image
 
 genai.configure(api_key="YOUR_API_KEY")
