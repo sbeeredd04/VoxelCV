@@ -1,11 +1,14 @@
 import pathlib
 import cv2
-from google import genai
+import google.generativeai as genai
 import PIL.Image
 import time
+import os
 
 # Initialize Gemini
-GOOGLE_API_KEY = "AIzaSyCOw3F-FxagrfJE-hBjBeIjGIsKYINHC1k"
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+if not GOOGLE_API_KEY:
+    raise ValueError("GOOGLE_API_KEY environment variable is required")
 genai.configure(api_key=GOOGLE_API_KEY)
 
 def analyze_fall_with_gemini(image_path):
@@ -109,6 +112,10 @@ def analyze_and_display(image_path):
 
 if __name__ == "__main__":
     import sys
+    
+    if len(sys.argv) != 2:
+        print("Usage: python falltest.py <image_path>")
+        sys.exit(1)
         
-    image_path = 
+    image_path = sys.argv[1]
     analyze_and_display(image_path)
